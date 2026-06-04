@@ -8,7 +8,7 @@ on:
 env:
   ECR_REGISTRY: 262778473495.dkr.ecr.us-east-1.amazonaws.com
   ECR_REPOSITORY: go-api-image
-  IMAGE_TAG: latest
+  IMAGE_TAG: ${{ github.sha }}
   HELM_RELEASE: my-app-chart
   HELM_NAMESPACE: go-api-ns
 
@@ -75,6 +75,7 @@ jobs:
           helm upgrade --install "${{ env.HELM_RELEASE }}" . \
             --namespace "${{ env.HELM_NAMESPACE }}" \
             --create-namespace \
+            --set image.tag=${{ github.sha }} \
             --wait \
             --timeout 5m
 
