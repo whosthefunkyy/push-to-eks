@@ -9,7 +9,7 @@ env:
   ECR_REGISTRY: 262778473495.dkr.ecr.us-east-1.amazonaws.com
   ECR_REPOSITORY: go-api-image
   IMAGE_TAG: latest
-  HELM_RELEASE: my-app
+  HELM_RELEASE: my-app-chart
   HELM_NAMESPACE: go-api-ns
 
 jobs:
