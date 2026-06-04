@@ -1,0 +1,17 @@
+{{- if and .Values.serviceAccount.create .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: go-api-pod-reader-binding
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "go-api.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.name }}
+    namespace: {{ .Values.namespace }}
+roleRef:
+  kind: Role
+  name: go-api-pod-reader
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
