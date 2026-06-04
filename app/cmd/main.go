@@ -19,7 +19,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello from Go API")
+		fmt.Fprintln(w, "этот парень идет тестить")
 	})
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
