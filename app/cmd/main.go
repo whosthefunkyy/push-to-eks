@@ -21,6 +21,13 @@ func main() {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "From Api, hii")
 	})
+	mux.HandleFunc("/cpu", func(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 500000000; i++ {
+		_ = i * i
+	}
+
+	fmt.Fprintln(w, "cpu done")
+})
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "ok")
