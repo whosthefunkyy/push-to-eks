@@ -24,10 +24,10 @@ service:
   type: ClusterIP
   port: 8080  
 
-###serviceMonitor:
-  ###enabled: true
-  ###interval: 30s
-  ###path: /metrics
+serviceMonitor:
+  enabled: true
+  interval: 15s
+  path: /metrics
 
 serviceAccount:
   create: true
