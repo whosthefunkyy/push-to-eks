@@ -6,7 +6,6 @@ metadata:
   labels:
     {{- include "go-api.labels" . | nindent 4 }}
   annotations:
-    
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
 spec:
