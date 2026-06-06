@@ -25,7 +25,7 @@ service:
   port: 8080  
 
 serviceMonitor:
-  enabled: true
+  enabled: false
   interval: 15s
   path: /metrics
 
