@@ -48,29 +48,11 @@ This repository assumes that infrastructure already exists. Check https://githu
 ---
 
 ## CI/CD Flow
-
-photo
+GitHub Push → GitHub Actions → Build Docker Image → Push Image to Amazon ECR → Helm Upgrade / Install → Amazon EKS → AWS ALB Ingress → Application Available Online
 
 ## Repository Structure
+<img width="633" height="667" alt="Снимок экрана 2026-06-10 в 20 47 19" src="https://github.com/user-attachments/assets/c9894b92-cf49-403c-941b-865a7b1b4a79" />
 
-```text
-app/
- ├── cmd/
- ├── Dockerfile
-
-templates/
- ├── deployment.yaml
- ├── service.yaml
- ├── ingress.yaml
- ├── hpa.yaml
- ├── servicemonitor.yaml
-
-.github/workflows/
- └── deploy.yml
-
-values.yaml
-Chart.yaml
-```
 
 ## Kubernetes Components
 
