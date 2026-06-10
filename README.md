@@ -8,34 +8,35 @@ graph LR
     classDef users fill:#10B981,stroke:#fff,stroke-width:2px,color:#fff;
 
     %% Разработчик и Git
-    Dev[Developer]:::dev -->|git push| GH[GitHub Repository]:::github
+    Dev[Developer]:::dev -->|Triggers via git push| GH[GitHub Repository]:::github
 
     %% Секция CI/CD (GitHub Actions)
     subgraph CI_CD [GitHub Actions CI/CD]
-        GH -->|Triggers Workflow| GHA[GitHub Actions Runner]:::github
-        GHA -->|1. Authenticates via| OIDC[GitHub OIDC]:::github
-        OIDC -->|2. Assumes| Role[AWS IAM Role]:::aws
-        GHA -->|3. Builds Image| Docker[Build Docker Image]:::github
+        GH -->|Runs Workflow| GHA[GitHub Actions Runner]:::github
+        GHA -->|Requests Token| OIDC[GitHub OIDC]:::github
+        OIDC -->|Assumes| Role[AWS IAM Role]:::aws
+        GHA -->|Executes| Docker[Build Docker Image]:::github
     end
 
     %% Секция AWS Registry & Deploy
-    Docker -->|4. Pushes Image| ECR[Amazon ECR]:::aws
-    Role -->|5. Triggers| Helm[Helm Upgrade]:::k8s
+    Docker -->|Pushes Image to| ECR[Amazon ECR]:::aws
+    Role -->|Applies Manifests via| Helm[Helm Upgrade]:::k8s
 
     %% Секция Kubernetes & Трафик
     subgraph EKS_Cluster [Amazon EKS Cluster]
-        Helm -->|Deploys / Updates| Deploy[Deployment / Pods]:::k8s
-        Service[Kubernetes Service]:::k8s -->|Routes to| Deploy
-        Ingress[Kubernetes Ingress]:::k8s -->|Forwards to| Service
+        Helm -->|Creates / Updates| Deploy[Deployment / Pods]:::k8s
+        Ingress[Kubernetes Ingress]:::k8s -->|Exposes| Service[Kubernetes Service]:::k8s
+        Service -->|Targets| Deploy
     end
 
     %% Внешний трафик (Вход в кластер)
-    ALB[AWS Application Load Balancer]:::aws -->|Routes via| Ingress
-    Users[Users / Clients]:::users -->|Access App| ALB
+    Users[Users / Clients]:::users -->|Sends HTTP Requests| ALB[AWS Application Load Balancer]:::aws
+    ALB -->|Routes to| Ingress
 
     %% Связь ECR и Deployment
-    ECR -.->|Pulls Image| Deploy
+    Deploy -.->|Pulls Active Image from| ECR
 ```
+
 
 # Go API on EKS with GitHub Actions CI/CD
 
