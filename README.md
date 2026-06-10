@@ -1,3 +1,42 @@
+```mermaid
+graph LR
+    %% Стилизация блоков
+    classDef dev fill:#4B5563,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef github fill:#24292e,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#232F3E;
+    classDef k8s fill:#326CE5,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef users fill:#10B981,stroke:#fff,stroke-width:2px,color:#fff;
+
+    %% Разработчик и Git
+    Dev[Developer]:::dev -->|git push| GH[GitHub Repository]:::github
+
+    %% Секция CI/CD (GitHub Actions)
+    subgraph CI_CD [GitHub Actions CI/CD]
+        GH -->|Triggers Workflow| GHA[GitHub Actions Runner]:::github
+        GHA -->|1. Authenticates via| OIDC[GitHub OIDC]:::github
+        OIDC -->|2. Assumes| Role[AWS IAM Role]:::aws
+        GHA -->|3. Builds Image| Docker[Build Docker Image]:::github
+    end
+
+    %% Секция AWS Registry & Deploy
+    Docker -->|4. Pushes Image| ECR[Amazon ECR]:::aws
+    Role -->|5. Triggers| Helm[Helm Upgrade]:::k8s
+
+    %% Секция Kubernetes & Трафик
+    subgraph EKS_Cluster [Amazon EKS Cluster]
+        Helm -->|Deploys / Updates| Deploy[Deployment / Pods]:::k8s
+        Service[Kubernetes Service]:::k8s -->|Routes to| Deploy
+        Ingress[Kubernetes Ingress]:::k8s -->|Forwards to| Service
+    end
+
+    %% Внешний трафик (Вход в кластер)
+    ALB[AWS Application Load Balancer]:::aws -->|Routes via| Ingress
+    Users[Users / Clients]:::users -->|Access App| ALB
+
+    %% Связь ECR и Deployment
+    ECR -.->|Pulls Image| Deploy
+```
+
 # Go API on EKS with GitHub Actions CI/CD
 
 ## Overview
